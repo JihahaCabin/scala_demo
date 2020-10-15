@@ -10,6 +10,9 @@ object StreamWordCount {
     //创建流处理的执行环境
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
+    // 设置并行度（几个线程处理）
+    env.setParallelism(3)
+
     //接收一个socket文本流
     val inputDataStream = env.socketTextStream("192.168.255.168",7777)
 
