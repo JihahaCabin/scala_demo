@@ -1,7 +1,11 @@
 package com.haha.wc
 
+import java.util.Properties
+
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.api.scala._
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
 
 // 批处理的word count
 object WordCount {
