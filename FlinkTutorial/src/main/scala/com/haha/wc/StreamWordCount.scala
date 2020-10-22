@@ -1,13 +1,8 @@
 package com.haha.wc
 
-import java.util.Properties
-
-import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
-
 //流处理word count
 object StreamWordCount {
 
