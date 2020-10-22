@@ -28,6 +28,25 @@ object TransformTest2 {
 
     aggStream.print()
 
+
+    // 多流转换操作
+    //分流操作 将传感器温度根据温度分成高温和低温
+    val splitStream = dataStream.split(data => {
+      if (data.temperature > 30.0) {
+        Seq("high")
+      } else {
+        Seq("low")
+      }
+    })
+
+    val high = splitStream.select("high")
+    val low = splitStream.select("low")
+    val all = splitStream.select("high", "low")
+
+    high.print("high")
+    low.print("low")
+    all.print("all")
+
     env.execute("transform test")
   }
 }
