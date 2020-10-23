@@ -47,6 +47,21 @@ object TransformTest2 {
     low.print("low")
     all.print("all")
 
+    //合流操作
+    val warningStream = high.map(data => (data.id, data.temperature))
+    //connect可以合并不同类型的流 得到 ConnectedStreams
+    val connected = warningStream.connect(low)
+
+    //CoMap操作 ConnectedStreams → DataStream，针对不同的流，设置不同的函数
+    val coMapResultStream = connected.map(
+      warningData => (warningData._1, warningData._2, "warning"),
+      logData => (logData.id, "healty")
+    )
+
+    coMapResultStream.print()
+
+
+
     env.execute("transform test")
   }
 }
