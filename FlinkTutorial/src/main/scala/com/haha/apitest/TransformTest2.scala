@@ -58,9 +58,11 @@ object TransformTest2 {
       logData => (logData.id, "healty")
     )
 
-    coMapResultStream.print()
+    coMapResultStream.print("coMap")
 
-
+    //union
+    val unionStream = high.union(low)
+    unionStream.print("union")
 
     env.execute("transform test")
   }
