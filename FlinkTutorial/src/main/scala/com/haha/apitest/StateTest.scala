@@ -28,7 +28,21 @@ object StateTest {
 
     //需求，对温度传感器，温度不能跳变，如果超过10度，则告警
     val alertStream = dataStream.keyBy(_.id)
-      .flatMap(new TempChangeAlert(10.0))
+      //      .flatMap(new TempChangeAlert(10.0)) //方式一
+      .flatMapWithState[(String, Double, Double), Double]({
+      case (data: SensorReading, None) => (List.empty, Some(data.temperature))
+      case (data: SensorReading, lastTemp: Some[Double]) => {
+        // 跟最新的温度值求差值，作比较
+        val diff = (data.temperature - lastTemp.get).abs
+        // 如果超过阈值，输出当前传感器id，之前的温度，当前的温度
+        if (diff > 10.0) {
+          //更新状态值
+          (List((data.id, lastTemp.get, data.temperature)), Some(data.temperature))
+        } else {
+          (List.empty, Some(data.temperature))
+        }
+      }
+    })
 
     alertStream.print()
 
