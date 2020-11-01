@@ -11,7 +11,7 @@ object WindowTest {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.setParallelism(1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime) //设置时间语义为事件时间
-    env.getConfig.setAutoWatermarkInterval(50) //设置watermark时间间隔
+    //    env.getConfig.setAutoWatermarkInterval(50) //设置watermark时间间隔
 
     //    // 从文件中读取数据
     ////    val inputPath: String = "D:\\Flink\\MyDemo\\FlinkTutorial\\src\\main\\resources\\sensor.txt"
