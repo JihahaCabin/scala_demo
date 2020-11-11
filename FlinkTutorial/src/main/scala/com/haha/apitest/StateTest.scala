@@ -13,6 +13,7 @@ object StateTest {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.setParallelism(1)
 
+
     //    // 从文件中读取数据
     ////    val inputPath: String = "D:\\Flink\\MyDemo\\FlinkTutorial\\src\\main\\resources\\sensor.txt"
     ////    val stream = env.readTextFile(inputPath)
