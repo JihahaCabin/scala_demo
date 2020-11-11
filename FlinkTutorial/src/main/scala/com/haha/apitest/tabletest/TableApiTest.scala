@@ -4,7 +4,7 @@ import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.table.api.{DataTypes, EnvironmentSettings, Table, TableEnvironment, _}
 import org.apache.flink.table.api.scala._
-import org.apache.flink.table.descriptors.{FileSystem, OldCsv, Schema}
+import org.apache.flink.table.descriptors.{Csv, FileSystem, Schema}
 
 
 object TableApiTest {
@@ -50,7 +50,7 @@ object TableApiTest {
     // 2.1 读取文件
     val filePath = "D:\\Flink\\MyDemo\\FlinkTutorial\\src\\main\\resources\\sensor.txt";
     tableEnv.connect(new FileSystem().path(filePath))
-      .withFormat(new OldCsv())
+      .withFormat(new Csv())
       .withSchema(new Schema()
         .field("id", DataTypes.STRING())
         .field("timestamp", DataTypes.BIGINT())
