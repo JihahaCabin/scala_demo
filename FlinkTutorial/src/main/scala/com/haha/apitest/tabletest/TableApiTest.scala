@@ -58,28 +58,46 @@ object TableApiTest {
       )
       .createTemporaryTable("inputTable")
 
-    val inputTable: Table = tableEnv.from("inputTable")
-
-    inputTable.toAppendStream[(String, Long, Double)].print()
+    //    val inputTable: Table = tableEnv.from("inputTable")
+    //
+    //    inputTable.toAppendStream[(String, Long, Double)].print()
 
 
     // 2.2 从kafka读取数据
-    tableEnv.connect(new Kafka()
-      .version("0.11")
-      .topic("sensor")
-      .property("zookeeper.connect", "localhost:2181")
-      .property("bootstrap.servers", "localhost:9092")
+    //    tableEnv.connect(new Kafka()
+    //      .version("0.11")
+    //      .topic("sensor")
+    //      .property("zookeeper.connect", "localhost:2181")
+    //      .property("bootstrap.servers", "localhost:9092")
+    //    )
+    //      .withFormat(new Csv())
+    //      .withSchema(new Schema()
+    //        .field("id", DataTypes.STRING())
+    //        .field("timestamp", DataTypes.BIGINT())
+    //        .field("temperature", DataTypes.DOUBLE())
+    //      ).createTemporaryTable("kafkaInputTable")
+    //
+    //    val kafkaInputTable: Table = tableEnv.from("kafkaInputTable")
+    //
+    //    kafkaInputTable.toAppendStream[(String, Long, Double)].print()
+
+    //3 查询转换
+    //3.1 使用table api
+    val inputTable: Table = tableEnv.from("inputTable")
+    inputTable.select("id,temperature")
+      .filter('id === "sensor_1")
+
+    // 3.2 SQL
+    val resutlSqlTable = tableEnv.sqlQuery(
+      """
+        |select id,temperature
+        |from inputTable
+        |where id = 'sensor_1'
+      """.stripMargin
     )
-      .withFormat(new Csv())
-      .withSchema(new Schema()
-        .field("id", DataTypes.STRING())
-        .field("timestamp", DataTypes.BIGINT())
-        .field("temperature", DataTypes.DOUBLE())
-      ).createTemporaryTable("kafkaInputTable")
 
-    val kafkaInputTable: Table = tableEnv.from("kafkaInputTable")
-
-    kafkaInputTable.toAppendStream[(String, Long, Double)].print()
+    inputTable.toAppendStream[(String, Long, Double)].print("input")
+    resutlSqlTable.toAppendStream[(String, Double)].print("sqlResult")
 
     env.execute("table api test")
 
