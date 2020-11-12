@@ -99,6 +99,19 @@ object TableApiTest {
     inputTable.toAppendStream[(String, Long, Double)].print("input")
     resutlSqlTable.toAppendStream[(String, Double)].print("sqlResult")
 
+    // 4. 输出到文件
+    val outFilePath = "D:\\Flink\\MyDemo\\FlinkTutorial\\src\\main\\resources\\out.txt";
+    tableEnv.connect(new FileSystem().path(outFilePath)) // 定义到文件系统的连接
+      .withFormat(new Csv()) // 定义格式化方法，Csv 格式
+      .withSchema(new Schema()
+      .field("id", DataTypes.STRING())
+      .field("temperature", DataTypes.DOUBLE())
+    )
+      .createTemporaryTable("outputTable")
+
+    resutlSqlTable.insertInto("outputTable")
+
+
     env.execute("table api test")
 
   }
