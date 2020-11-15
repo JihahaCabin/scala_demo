@@ -2,7 +2,9 @@ package com.haha.apitest.tabletest
 
 import com.haha.apitest.SensorReading
 import org.apache.flink.streaming.api.TimeCharacteristic
+import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.table.api.{DataTypes, EnvironmentSettings}
 import org.apache.flink.table.api.scala._
 import org.apache.flink.table.descriptors.{Csv, FileSystem, Schema}
@@ -31,6 +33,9 @@ object TimeAndWindowTest {
       data => {
         val arr = data.split(",")
         SensorReading(arr(0), arr(1).toLong, arr(2).toDouble)
+      })
+      .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[SensorReading](Time.seconds(1)) {
+        override def extractTimestamp(t: SensorReading): Long = t.timeStamp * 1000L
       })
 
     //使用.proctime 定义处理时间
